@@ -70,7 +70,7 @@ ${criteriaSection}
   "questions": [
     {
       "type": "技术能力",
-      "question": "你在【简历中某个具体项目名称】里提到了[某个技术做法]，请详细说明你是如何实现的？当时遇到了什么挑战？",
+      "question": "（此处必须填入真实问题，直接点名简历中的真实公司名或项目名，例如：你在XX公司负责的XX项目中使用了XX技术，请详细说明实现逻辑和遇到的挑战？）",
       "intent": "考察意图：这道题想验证什么",
       "referenceAnswer": "优秀候选人的参考答案要点（3-5个关键点，以分号分隔）"
     }
@@ -84,7 +84,13 @@ ${criteriaSection}
 - criteriaCheck：按上方【本次额外筛选条件】逐条填写，无筛选条件时填空数组
 - strengths：列出4-6条，每条必须明确对应JD中的某个具体要求，并引用简历中的实证
 - weaknesses：列出3-5条，每条必须指出JD的哪个具体要求没有被满足，区分"完全空白"和"经验不足"
-- questions：6道题，覆盖技术能力、项目经验、行为面试三种类型；每道题的 question 字段必须在问题文本中点名【候选人简历里真实出现的】项目名称或公司名称，绝对不能虚构或假设任何项目名——先从简历中找到真实的项目/公司，再围绕该项目提问；若简历未提及具体项目名则用公司名+时间段代替；不得使用泛化通用问法；referenceAnswer给出HR可用于评估的答案要点
+- questions：6道题，覆盖技术能力、项目经验、行为面试三种类型
+  - 每道题的 question 字段必须直接使用简历中真实出现的公司名称或项目名称，例如"你在腾讯负责的XX项目中..."、"你在字节跳动实习期间..."
+  - 严禁使用任何占位符（如"某公司"、"A公司"、"某项目"、"【项目名】"等），必须是简历原文出现的真实名称
+  - 先仔细阅读简历找出所有公司名和项目名，再围绕这些真实内容提问
+  - 若简历完全未提及具体项目名，则用"公司名+时间段+岗位"代替，如"你在XX公司2022年担任后端工程师期间..."
+  - 不得使用泛化通用问法
+  - referenceAnswer给出HR可用于评估的答案要点
 - 返回合法JSON，字符串内不得有未转义的换行`;
   }
 
@@ -116,7 +122,7 @@ Return ONLY valid JSON in exactly this format:
   "questions": [
     {
       "type": "Technical",
-      "question": "In your [specific project name from resume], you mentioned [specific technology/approach] — can you walk me through how you implemented it and what challenges you faced?",
+      "question": "(Write the actual question here, naming a REAL company or project from the resume, e.g.: 'During your time at [Actual Company Name] working on [Actual Project Name], you used [specific technology] — can you walk me through how you implemented it and what challenges you faced?')",
       "intent": "What this question is designed to verify",
       "referenceAnswer": "Key points of a strong answer (3-5 points separated by semicolons)"
     }
@@ -130,7 +136,13 @@ Rules:
 - criteriaCheck: fill in per the additional criteria above; empty array if none
 - strengths: 4-6 items, each tied to a specific JD requirement with resume evidence
 - weaknesses: 3-5 items, each naming the exact JD requirement unmet; distinguish "completely absent" from "insufficient experience"
-- questions: 6 questions covering Technical, Experience, and Behavioral types; each question's "question" field MUST name a specific project or company from the resume in the question text itself (e.g., "In your [Project X]...", "During your time at [Company Y]...") — use ONLY real project/company names that actually appear in the resume, never invent or assume any; so the candidate knows exactly which experience is being asked about; no generic questions allowed; referenceAnswer gives HR-usable evaluation criteria
+- questions: 6 questions covering Technical, Experience, and Behavioral types
+  - Each question's "question" field MUST use the actual company name or project name as it literally appears in the resume (e.g., "During your time at Tencent on the XX project...", "In your role at ByteDance in 2022...")
+  - NEVER use placeholders like "Company A", "a certain company", "[Project Name]", or any invented names — only real names from the resume text
+  - First read the resume carefully to extract all real company and project names, then build questions around those
+  - If the resume has no specific project names, use "company name + time period + role" (e.g., "During your time as backend engineer at XX Company in 2022...")
+  - No generic questions allowed
+  - referenceAnswer gives HR-usable evaluation criteria
 - Return valid JSON only; no unescaped newlines inside strings`;
 }
 
