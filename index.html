@@ -366,9 +366,15 @@
         支持任何兼容 OpenAI API 格式的服务。API Key 仅存储在您的浏览器本地。
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" id="btn-reset-settings" data-i18n="reset">恢复默认</button>
-      <button class="btn btn-primary" id="btn-save-settings" data-i18n="save">保存设置</button>
+    <div class="modal-footer" style="flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;gap:8px;flex:1;">
+        <button class="btn btn-secondary" id="btn-export-settings" onclick="exportSettings()">导出配置</button>
+        <label class="btn btn-secondary" style="cursor:pointer;">导入配置<input type="file" id="import-settings-input" accept=".json" hidden onchange="importSettings(event)"></label>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary" id="btn-reset-settings" data-i18n="reset">恢复默认</button>
+        <button class="btn btn-primary" id="btn-save-settings" data-i18n="save">保存设置</button>
+      </div>
     </div>
   </div>
 </div>

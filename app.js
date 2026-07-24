@@ -892,6 +892,46 @@ function resetSettings() {
   showToast(t('settings_saved'), 'success');
 }
 
+function exportSettings() {
+  const settings = getSettings();
+  const lang = localStorage.getItem('hr_lang') || currentLang;
+  const data = JSON.stringify({ ...settings, lang }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'hr_analyzer_settings.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('配置已导出', 'success');
+}
+
+function importSettings(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      saveSettings({
+        apiEndpoint: data.apiEndpoint || 'https://api.openai.com/v1/chat/completions',
+        whisperEndpoint: data.whisperEndpoint || '',
+        apiKey: data.apiKey || '',
+        model: data.model || 'gpt-4o'
+      });
+      if (data.lang) localStorage.setItem('hr_lang', data.lang);
+      // 刷新设置面板显示
+      openSettings();
+      showToast('配置已导入，请保存生效', 'success');
+    } catch (_) {
+      showToast('文件格式错误', 'error');
+    }
+  };
+  reader.readAsText(file);
+  // 清空 input，允许重复导入同一文件
+  event.target.value = '';
+}
+
 function loadSettings() {
   const settings = getSettings();
   const lang = localStorage.getItem('hr_lang');
