@@ -79,31 +79,26 @@ ${criteriaSection}
   "summary": "一句话综合评价"
 }
 
-生成 questions 的步骤（必须按此顺序执行）：
+生成 questions 的步骤（必须严格按此顺序执行，不可跳过）：
 
-第一步：通读简历，逐句提取以下类型的"可追问锚点"：
-  - 具体数字或成果（如"转化率提升23%"、"DAU从5万增长到80万"、"响应时间降至120ms"）
-  - 技术选型决策（如"选用了XX框架"、"从A方案迁移到B方案"）
-  - 带有主导/负责/设计字样的职责描述（如"主导重构"、"独立设计"、"带领3人团队"）
-  - 解决了某个具体问题（如"解决了XX性能瓶颈"、"修复了XX线上事故"）
-  - 数量规模描述（如"管理100+SKU"、"日均处理10万条数据"）
+第一步：从 JD 中提取本岗位最核心的3-4个考察维度（例如：数据分析能力、用户研究方法论、跨部门推动落地、工具熟练度等），这些维度就是面试题的出题方向。
 
-第二步：针对每个锚点，设计一个"拆解追问"——不是问候选人"做了什么"（简历已经写了），而是问：
-  - 这个结果是怎么一步步做到的？（过程）
-  - 当时面临哪些约束或选择？为什么这样决策？（判断力）
-  - 遇到了什么具体障碍？怎么解决的？（真实性验证）
-  - 如果重来一次你会改变什么？（反思深度）
+第二步：对照每个 JD 考察维度，在简历里找到候选人最相关的真实经历——具体公司、项目名、数字、技术栈、成果描述——作为追问的素材锚点。若简历中某个维度完全空白，则围绕该缺口设计一道"压力验证题"，看候选人如何应对。
 
-第三步：按以下规则组合6道题：
-  - 2道"技术能力"：针对简历中提到的技术实现细节或数据结果追问
-  - 2道"项目经验"：针对简历中主导/负责的项目追问决策过程和业务影响
-  - 2道"行为面试"：针对简历中体现的协作/推动/处理矛盾的场景追问具体行为
+第三步：针对每个锚点设计追问。问题必须是"拆解型"而非"描述型"：
+  - 不问"你做了什么"（简历已经写了）
+  - 要问"你是怎么一步步做到的"、"当时有哪些方案你没选、为什么"、"遇到最大的阻力是什么、怎么解决的"、"这个数字/结论是怎么得出来的，方法论是什么"
 
-强制规则：
-  - 每道题必须在 question 字段中直接引用或提及简历原文的具体内容（公司名、项目名、数字、技术名任选其一）
-  - 严禁出现"某公司"、"A公司"、"某项目"、"[项目名]"等任何占位符
-  - 严禁出现"请介绍一下你的项目经验"、"你擅长哪些技术"等泛化通用问题
-  - 每道题的 referenceAnswer 必须给出能区分"真做过"和"只是写在简历上"的关键答案要点
+第四步：组合6道题，每道题必须同时满足：
+  - 对应一个 JD 考察维度（在 intent 字段注明）
+  - 引用简历中的真实内容（公司名/项目名/数字/技术名至少一项，直接写在 question 里）
+  - 问法不能模板化，每道题的切入角度都不同（过程追溯、决策逻辑、困难复盘、方法论拆解、数据来源、跨部门协作……轮换使用）
+  - referenceAnswer 给出能区分"真做过"和"只是写在简历上"的具体评估要点
+
+绝对禁止：
+  - 占位符（"某公司"、"A公司"、"某项目"、"【X】"等）
+  - 泛化问法（"介绍一下你的经验"、"你最大的优势是什么"等）
+  - 同一种追问角度重复出现超过一次
 - 返回合法JSON，字符串内不得有未转义的换行`;
   }
 
@@ -144,31 +139,29 @@ Return ONLY valid JSON in exactly this format:
   "summary": "One-sentence overall assessment"
 }
 
-To generate questions, follow these steps in order:
+To generate questions, follow these steps strictly in order — do not skip any step:
 
-Step 1 — Extract "anchor points" from the resume (read every line):
-  - Specific numbers or outcomes (e.g., "increased conversion by 23%", "reduced latency from 800ms to 120ms")
-  - Technology choices or migrations (e.g., "chose framework X", "migrated from A to B")
-  - Ownership language (e.g., "led", "designed independently", "managed a team of 3")
-  - Problem-solving claims (e.g., "resolved performance bottleneck", "fixed production incident")
-  - Scale descriptors (e.g., "100k daily requests", "managed 500+ SKUs")
+Step 1 — Extract 3-4 core competency dimensions from the JD (e.g., data analysis depth, user research methodology, cross-functional influence, tool proficiency). These become the thematic anchors for your questions.
 
-Step 2 — For each anchor point, design a "drill-down" question that does NOT ask what they did (the resume already says that), but instead asks:
-  - How exactly did you achieve that result, step by step? (process)
-  - What constraints or alternatives did you consider, and why did you choose this path? (judgment)
-  - What specific obstacle did you hit, and how did you get past it? (authenticity check)
-  - If you could do it over, what would you change? (depth of reflection)
+Step 2 — For each JD dimension, find the most relevant real experience in the resume: actual company name, project name, a specific number, technology, or outcome described. These become the question hooks. If the resume is completely silent on a dimension, design a "pressure-test" question for that gap instead.
 
-Step 3 — Compose 6 questions:
-  - 2 "Technical": drill into specific technical implementations or metrics from the resume
-  - 2 "Experience": probe the decision-making process and business impact of projects they led
-  - 2 "Behavioral": probe specific collaboration, persuasion, or conflict situations mentioned or implied in the resume
+Step 3 — For each hook, design a drill-down question. The question must NOT ask what they did (the resume already says that). It must ask one of these instead:
+  - How exactly did you get to that result, step by step?
+  - What alternatives did you consider and reject — and why?
+  - What was the hardest obstacle, and specifically how did you get past it?
+  - How did you derive that number/conclusion — what was your methodology?
+  - Where did pushback come from, and how did you handle it?
 
-Hard rules:
-  - Every question MUST directly reference or quote something specific from the resume (company name, project name, a number, a technology — pick at least one)
-  - NEVER use placeholders like "Company A", "a certain project", "[project name]", or any invented content
-  - NEVER ask generic questions like "tell me about your experience" or "what are your strengths"
-  - referenceAnswer must give evaluation criteria that distinguish a candidate who truly did the work from one who only wrote it down
+Step 4 — Compose 6 questions, each one must simultaneously:
+  - Map to a specific JD competency dimension (state it in the "intent" field)
+  - Directly name something real from the resume in the question text (company, project, number, or tech — at least one)
+  - Use a different drill angle from every other question (process trace / decision logic / difficulty debrief / methodology breakdown / data sourcing / cross-team dynamics — rotate, never repeat the same angle twice)
+  - Have a referenceAnswer with concrete evaluation criteria that distinguish "actually did it" from "just listed it on the resume"
+
+Absolute prohibitions:
+  - No placeholders ("Company A", "a certain project", "[X]", or anything invented)
+  - No generic questions ("tell me about your experience", "what are your strengths")
+  - No two questions using the same drill angle
 - Return valid JSON only; no unescaped newlines inside strings`;
 }
 
