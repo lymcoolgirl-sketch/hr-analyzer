@@ -69,28 +69,41 @@ ${criteriaSection}
   ],
   "questions": [
     {
-      "type": "技术能力",
-      "question": "（此处必须填入真实问题，直接点名简历中的真实公司名或项目名，例如：你在XX公司负责的XX项目中使用了XX技术，请详细说明实现逻辑和遇到的挑战？）",
-      "intent": "考察意图：这道题想验证什么",
-      "referenceAnswer": "优秀候选人的参考答案要点（3-5个关键点，以分号分隔）"
+      "type": "技术能力|项目经验|行为面试 三选一",
+      "question": "针对简历中某句具体描述设计的追问，直接引用简历原文中的数字/技术/成果，问出这个结果是怎么做到的、遇到什么困难、如何决策的",
+      "intent": "这道题要验证什么，识别出简历中哪类水分或真实深度",
+      "referenceAnswer": "优秀候选人应该能答出的3-5个关键点，以分号分隔"
     }
   ],
   "pitchStrategy": "结合候选人背景和JD要求，用1-2段说明HR如何向其介绍岗位价值、团队技术水平和发展空间",
   "summary": "一句话综合评价"
 }
 
-要求：
-- matchScore：0-100整数
-- criteriaCheck：按上方【本次额外筛选条件】逐条填写，无筛选条件时填空数组
-- strengths：列出4-6条，每条必须明确对应JD中的某个具体要求，并引用简历中的实证
-- weaknesses：列出3-5条，每条必须指出JD的哪个具体要求没有被满足，区分"完全空白"和"经验不足"
-- questions：6道题，覆盖技术能力、项目经验、行为面试三种类型
-  - 每道题的 question 字段必须直接使用简历中真实出现的公司名称或项目名称，例如"你在腾讯负责的XX项目中..."、"你在字节跳动实习期间..."
-  - 严禁使用任何占位符（如"某公司"、"A公司"、"某项目"、"【项目名】"等），必须是简历原文出现的真实名称
-  - 先仔细阅读简历找出所有公司名和项目名，再围绕这些真实内容提问
-  - 若简历完全未提及具体项目名，则用"公司名+时间段+岗位"代替，如"你在XX公司2022年担任后端工程师期间..."
-  - 不得使用泛化通用问法
-  - referenceAnswer给出HR可用于评估的答案要点
+生成 questions 的步骤（必须按此顺序执行）：
+
+第一步：通读简历，逐句提取以下类型的"可追问锚点"：
+  - 具体数字或成果（如"转化率提升23%"、"DAU从5万增长到80万"、"响应时间降至120ms"）
+  - 技术选型决策（如"选用了XX框架"、"从A方案迁移到B方案"）
+  - 带有主导/负责/设计字样的职责描述（如"主导重构"、"独立设计"、"带领3人团队"）
+  - 解决了某个具体问题（如"解决了XX性能瓶颈"、"修复了XX线上事故"）
+  - 数量规模描述（如"管理100+SKU"、"日均处理10万条数据"）
+
+第二步：针对每个锚点，设计一个"拆解追问"——不是问候选人"做了什么"（简历已经写了），而是问：
+  - 这个结果是怎么一步步做到的？（过程）
+  - 当时面临哪些约束或选择？为什么这样决策？（判断力）
+  - 遇到了什么具体障碍？怎么解决的？（真实性验证）
+  - 如果重来一次你会改变什么？（反思深度）
+
+第三步：按以下规则组合6道题：
+  - 2道"技术能力"：针对简历中提到的技术实现细节或数据结果追问
+  - 2道"项目经验"：针对简历中主导/负责的项目追问决策过程和业务影响
+  - 2道"行为面试"：针对简历中体现的协作/推动/处理矛盾的场景追问具体行为
+
+强制规则：
+  - 每道题必须在 question 字段中直接引用或提及简历原文的具体内容（公司名、项目名、数字、技术名任选其一）
+  - 严禁出现"某公司"、"A公司"、"某项目"、"[项目名]"等任何占位符
+  - 严禁出现"请介绍一下你的项目经验"、"你擅长哪些技术"等泛化通用问题
+  - 每道题的 referenceAnswer 必须给出能区分"真做过"和"只是写在简历上"的关键答案要点
 - 返回合法JSON，字符串内不得有未转义的换行`;
   }
 
@@ -121,28 +134,41 @@ Return ONLY valid JSON in exactly this format:
   ],
   "questions": [
     {
-      "type": "Technical",
-      "question": "(Write the actual question here, naming a REAL company or project from the resume, e.g.: 'During your time at [Actual Company Name] working on [Actual Project Name], you used [specific technology] — can you walk me through how you implemented it and what challenges you faced?')",
-      "intent": "What this question is designed to verify",
-      "referenceAnswer": "Key points of a strong answer (3-5 points separated by semicolons)"
+      "type": "Technical | Experience | Behavioral — pick one",
+      "question": "A deep follow-up question targeting a specific claim in the resume — quoting an actual number, technology, or outcome from the resume text — asking HOW they achieved it, WHAT tradeoffs they made, or WHAT went wrong",
+      "intent": "What this question is designed to verify — specifically what depth or authenticity it probes",
+      "referenceAnswer": "3-5 key points a strong candidate should cover, separated by semicolons — focused on distinguishing 'actually did it' from 'just wrote it on the resume'"
     }
   ],
   "pitchStrategy": "1-2 paragraphs on how HR can pitch the role's value, team tech level, and growth path tailored to this candidate",
   "summary": "One-sentence overall assessment"
 }
 
-Rules:
-- matchScore: integer 0-100
-- criteriaCheck: fill in per the additional criteria above; empty array if none
-- strengths: 4-6 items, each tied to a specific JD requirement with resume evidence
-- weaknesses: 3-5 items, each naming the exact JD requirement unmet; distinguish "completely absent" from "insufficient experience"
-- questions: 6 questions covering Technical, Experience, and Behavioral types
-  - Each question's "question" field MUST use the actual company name or project name as it literally appears in the resume (e.g., "During your time at Tencent on the XX project...", "In your role at ByteDance in 2022...")
-  - NEVER use placeholders like "Company A", "a certain company", "[Project Name]", or any invented names — only real names from the resume text
-  - First read the resume carefully to extract all real company and project names, then build questions around those
-  - If the resume has no specific project names, use "company name + time period + role" (e.g., "During your time as backend engineer at XX Company in 2022...")
-  - No generic questions allowed
-  - referenceAnswer gives HR-usable evaluation criteria
+To generate questions, follow these steps in order:
+
+Step 1 — Extract "anchor points" from the resume (read every line):
+  - Specific numbers or outcomes (e.g., "increased conversion by 23%", "reduced latency from 800ms to 120ms")
+  - Technology choices or migrations (e.g., "chose framework X", "migrated from A to B")
+  - Ownership language (e.g., "led", "designed independently", "managed a team of 3")
+  - Problem-solving claims (e.g., "resolved performance bottleneck", "fixed production incident")
+  - Scale descriptors (e.g., "100k daily requests", "managed 500+ SKUs")
+
+Step 2 — For each anchor point, design a "drill-down" question that does NOT ask what they did (the resume already says that), but instead asks:
+  - How exactly did you achieve that result, step by step? (process)
+  - What constraints or alternatives did you consider, and why did you choose this path? (judgment)
+  - What specific obstacle did you hit, and how did you get past it? (authenticity check)
+  - If you could do it over, what would you change? (depth of reflection)
+
+Step 3 — Compose 6 questions:
+  - 2 "Technical": drill into specific technical implementations or metrics from the resume
+  - 2 "Experience": probe the decision-making process and business impact of projects they led
+  - 2 "Behavioral": probe specific collaboration, persuasion, or conflict situations mentioned or implied in the resume
+
+Hard rules:
+  - Every question MUST directly reference or quote something specific from the resume (company name, project name, a number, a technology — pick at least one)
+  - NEVER use placeholders like "Company A", "a certain project", "[project name]", or any invented content
+  - NEVER ask generic questions like "tell me about your experience" or "what are your strengths"
+  - referenceAnswer must give evaluation criteria that distinguish a candidate who truly did the work from one who only wrote it down
 - Return valid JSON only; no unescaped newlines inside strings`;
 }
 
